@@ -9,6 +9,8 @@ public interface CategoryService {
 	//Get Categories
 	public List<Category> getCategories();
 	
+	public Category getCategory(int categoryId); 
+	
 	//Add Categories
 	public String addCategory(Category category);
 	

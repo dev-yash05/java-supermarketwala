@@ -3,6 +3,7 @@ package com.example.supermarketwala.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,27 +25,35 @@ public class CategoryController {
 	private CategoryService categoryService;
 	
 	@GetMapping("/categories")
-	List<Category> getCategories() {
-		
-		return categoryService.getCategories();
+	ResponseEntity<List<Category>> getCategories() {
+		List<Category> categories = categoryService.getCategories();
+		return ResponseEntity.ok().body(categories);
 	}
 	
+	//return a single category based on the categoryId to the user
+	@GetMapping("/category/{catId}")
+	ResponseEntity<Category> getCategory(@PathVariable("catId") int categoryId){
+		
+		Category category = categoryService.getCategory(categoryId);
+		return ResponseEntity.ok().body(category);
+	}
+		
 	@PostMapping("/categories")
-	String addCategory(@RequestBody Category category) {
+	ResponseEntity<String> addCategory(@RequestBody Category category) {
 		String message = categoryService.addCategory(category);
-		return message;
+		return ResponseEntity.accepted().body(message);
 	}
 	
 	@DeleteMapping("/categories/d/{catId}")
-	String deleteCategory(@PathVariable("catId") int categoryId) {
+	ResponseEntity<String> deleteCategory(@PathVariable("catId") int categoryId) {
 		String message = categoryService.deleteCategory(categoryId);
-		return message;
+		return ResponseEntity.ok().body(message);
 	}
 	
 	@PutMapping("/categories/u/{catId}")
-	String updateCategory(@PathVariable("catId") int categoryId,@RequestBody Category category) {
+	ResponseEntity<String> updateCategory(@PathVariable("catId") int categoryId,@RequestBody Category category) {
 		String message = categoryService.updateCategory(categoryId, category);
-		return message;
+		return ResponseEntity.ok().body(message);
 	}
 	
 }
