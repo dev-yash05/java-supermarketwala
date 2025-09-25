@@ -1,69 +1,72 @@
 package com.example.supermarketwala.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.supermarketwala.exception.NotFoundException;
 import com.example.supermarketwala.model.Category;
+import com.example.supermarketwala.repo.CategoryRepository;
 
 @Service
 public class CategoryServiceImplementation implements CategoryService {
 	
-	List<Category> categories = new ArrayList<>();
+
+	@Autowired
+	CategoryRepository categoryRepository;
 
 	@Override
 	public List<Category> getCategories() {
 		// TODO Auto-generated method stub
-		return categories;
+		return categoryRepository.findAll();
+	}
+	
+	@Override
+	public Category getCategory(Long categoryId) {
+
+	    return categoryRepository.findById(categoryId)
+	            .orElseThrow(() -> new NotFoundException("Category with Id: " + categoryId + " not found!"));
 	}
 
 	@Override
 	public String addCategory(Category category) {
-		categories.add(category);
+		categoryRepository.save(category);
 		return category.toString() +" Added Successfully!";
 	}
 
 	@Override
-	public String deleteCategory(int categoryId) {
-		Long id = Long.valueOf(categoryId);
-		Category categoryToBeRemoved = findByIdOrThrow(id);
-		categories.remove(categoryToBeRemoved);
-		return  categoryToBeRemoved.toString() + " Deleted Successfully!" ;
+	public String deleteCategory(Long categoryId) {
+		Optional<Category> categoryToBeDeleted = categoryRepository.findById(categoryId);
+		categoryRepository.deleteById(categoryId);
+		return categoryToBeDeleted.toString() +" Deleted Successfully!" ;
 	}
 
 	@Override
-	public String updateCategory(int categoryId, Category category) {
-		categoryId--;
-		categories.set(categoryId, category);
-		return "Category with Id:" + categories.get(categoryId).getCategoryId() + " Updated to " + category.toString() + " Successfully!";
+	public String updateCategory(Long categoryId, Category category) {
+
+	    // Find existing category or throw exception
+	    Category existingCategory = categoryRepository.findById(categoryId)
+	            .orElseThrow(() -> new NotFoundException("Category with Id " + categoryId + " not found!"));
+
+	    // Update fields (only the ones you want to allow updating)
+	    existingCategory.setCategoryName(category.getCategoryName());
+	    // add more setters if your Category has more fields
+
+	    // Save updated entity
+	    categoryRepository.save(existingCategory);
+
+	    return "Category with Id: " + categoryId + " updated to " + existingCategory.toString() + " successfully!";
 	}
 
-	@Override
-	public Category getCategory(int categoryId) {
-//		categoryId--;
-//		boolean found = false;
-//		Long foundId = 0L;
-//		
-//		for(int i =0; i <= categoryId; i++) {
-//			foundId = categories.get(i).getCategoryId();
-//			
-//		}
-//		
-//		
-////		Category category = categories.get(categoryId);
-		
-		return null;
-	}
 	
 	
-	private Category findByIdOrThrow(Long id) {
-		Optional<Category> opt = categories.stream()
-				.filter(c -> c.getCategoryId() != null && c.getCategoryId().equals(id))
-				.findFirst();
-		return opt.orElseThrow(() -> new NotFoundException("Category with Id: " + id + " Not found!"));
-	}
+//	private Category findByIdOrThrow(Long id) {
+//		Optional<Category> opt = categories.stream()
+//				.filter(c -> c.getCategoryId() != null && c.getCategoryId().equals(id))
+//				.findFirst();
+//		return opt.orElseThrow(() -> new NotFoundException("Category with Id: " + id + " Not found!"));
+//	}
 	
 }

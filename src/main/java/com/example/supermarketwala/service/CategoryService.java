@@ -9,15 +9,15 @@ public interface CategoryService {
 	//Get Categories
 	public List<Category> getCategories();
 	
-	public Category getCategory(int categoryId); 
+	public Category getCategory(Long categoryId); 
 	
 	//Add Categories
 	public String addCategory(Category category);
 	
 	//Delete a Category
-	public String deleteCategory(int categoryId);
+	public String deleteCategory(Long categoryId);
 	
 	//Update a Category
-	public String updateCategory(int categoryId, Category category);
+	public String updateCategory(Long categoryId, Category category);
 
 }

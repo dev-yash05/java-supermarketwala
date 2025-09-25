@@ -32,7 +32,7 @@ public class CategoryController {
 	
 	//return a single category based on the categoryId to the user
 	@GetMapping("/category/{catId}")
-	ResponseEntity<Category> getCategory(@PathVariable("catId") int categoryId){
+	ResponseEntity<Category> getCategory(@PathVariable("catId") Long categoryId){
 		
 		Category category = categoryService.getCategory(categoryId);
 		return ResponseEntity.ok().body(category);
@@ -45,13 +45,13 @@ public class CategoryController {
 	}
 	
 	@DeleteMapping("/categories/d/{catId}")
-	ResponseEntity<String> deleteCategory(@PathVariable("catId") int categoryId) {
+	ResponseEntity<String> deleteCategory(@PathVariable("catId") Long categoryId) {
 		String message = categoryService.deleteCategory(categoryId);
 		return ResponseEntity.ok().body(message);
 	}
 	
 	@PutMapping("/categories/u/{catId}")
-	ResponseEntity<String> updateCategory(@PathVariable("catId") int categoryId,@RequestBody Category category) {
+	ResponseEntity<String> updateCategory(@PathVariable("catId") Long categoryId,@RequestBody Category category) {
 		String message = categoryService.updateCategory(categoryId, category);
 		return ResponseEntity.ok().body(message);
 	}
